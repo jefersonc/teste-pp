@@ -35,7 +35,10 @@ Utilizei docker-compose para prover todo o ambiente local.
 # Como rodar a bagaça
 ```sh
 // não se preocupe em gerar dados, o container é iniciado com uma migration
-só pra possibilitar a request solicitada no teste
+// só pra possibilitar a request solicitada no teste
+
+// clonar
+https://github.com/jefersonc/teste-pp.git
 
 // criar o env da aplicação com base no exemplo
 make setup
