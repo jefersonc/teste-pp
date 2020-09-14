@@ -38,7 +38,7 @@ Utilizei docker-compose para prover todo o ambiente local.
 // só pra possibilitar a request solicitada no teste
 
 // clonar
-git clone https://github.com/jefersonc/teste-pp.git
+git clone https://github.com/jefersonc/teste-pp.git && cd teste-pp
 
 // criar o env da aplicação com base no exemplo
 make setup
