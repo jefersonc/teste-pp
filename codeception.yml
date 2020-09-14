@@ -1,0 +1,23 @@
+suites:
+    unit:
+        path: unit
+
+coverage:
+    enabled: true
+    low_limit: 90
+    high_limit: 100
+    include:
+        - src/*
+    exclude:
+        - src/dependencies.php
+        - src/Adapters/*
+
+settings:
+    shuffle: true
+    lint: true
+
+paths:
+    tests: tests
+    output: report
+    support: tests/_support
+    data: tests

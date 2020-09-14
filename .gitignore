@@ -1,0 +1,7 @@
+vendor/
+.idea/
+report/
+.env
+.log
+.phpunit.result.cache
+

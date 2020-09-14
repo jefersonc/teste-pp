@@ -1,0 +1,39 @@
+version: '3.4'
+
+services:
+  dev:
+    build:
+      context: .
+      target: dev
+    volumes:
+      - ./:/code
+    networks:
+      - teste-network
+    ports:
+      - 8080:8080
+
+  mongo:
+    image: mongo:4.4.0-bionic
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - 27017:27017
+    volumes:
+      - ./local/mongo:/docker-entrypoint-initdb.d
+    networks:
+      - teste-network
+
+  redis:
+    image: redis:6.0-rc1-alpine
+    networks:
+      - teste-network
+
+volumes:
+  postgre-data:
+    driver: local
+
+networks:
+  teste-network:
+    external: false
