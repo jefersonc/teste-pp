@@ -51,6 +51,9 @@ make test
 
 // rodar análise estática
 make analyze
+
+// caso não queira abrir o postman, o curl tá salvo em
+make request
 ```
 
 # O que mais eu queria ter feito
