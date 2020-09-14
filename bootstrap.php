@@ -27,6 +27,14 @@ $app->post('/transaction', function (Request $request, Response $response) use (
     $payee = $customerRepository->findByExternalCode($payload['payee']);
     $payer = $customerRepository->findByExternalCode($payload['payer']);
 
+    if (!$payee) {
+        throw new \Jefersonc\TestePP\Infra\Exception\EntityNotFoundException("Payee not found");
+    }
+
+    if (!$payer) {
+        throw new \Jefersonc\TestePP\Infra\Exception\EntityNotFoundException("Payer not found");
+    }
+
     $transfer($payer, $payee, $payload['value']);
 
     return $response;

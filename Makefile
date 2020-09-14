@@ -7,6 +7,9 @@ up:
 	- docker-compose up -d --build
 	- docker-compose exec dev composer install
 
+spy:
+	- tail -f log
+
 test:
 	- docker-compose exec dev composer run test
 
@@ -14,6 +17,3 @@ analyze:
 	- docker-compose exec dev composer run stan-analysis
 	- docker-compose exec dev composer run mess-report
 	- docker-compose exec dev composer run sniffer-report
-
-sh:
-	- docker-compose exec dev sh
