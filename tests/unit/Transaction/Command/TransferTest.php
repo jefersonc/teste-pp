@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Jefersonc\TestePP\Tests\Unit\Transaction\Action;
+namespace Jefersonc\TestePP\Tests\Unit\Transaction\Command;
 
 use Codeception\TestCase\Test;
 use Jefersonc\TestePP\Domain\Auth\User\User;
 use Jefersonc\TestePP\Domain\Customer\Customer;
-use Jefersonc\TestePP\Domain\Transaction\Action\Transfer;
+use Jefersonc\TestePP\Domain\Transaction\Command\CreateTransferCommand;
+use Jefersonc\TestePP\Domain\Transaction\Command\CreateTransferCommandHandler;
+use Jefersonc\TestePP\Domain\Transaction\Command\Transfer;
 use Jefersonc\TestePP\Domain\Transaction\Exception\AuthorizationFailed;
 use Jefersonc\TestePP\Domain\Transaction\Exception\CustomerNotAbleToSendFunds;
 use Jefersonc\TestePP\Domain\Transaction\Exception\InsufficientFunds;
@@ -65,18 +67,18 @@ class TransferTest extends Test
             ->disableOriginalConstructor()
             ->getMock();
 
-        $transferAction = new Transfer(
+        $handler = new CreateTransferCommandHandler(
             $authorizerServiceStub,
             $notifierServiceStub,
             $transactionRepositoryStub,
             new Logger()
         );
 
-        $transaction = $transferAction($payer, $payee, 1.50);
+        $command = new CreateTransferCommand($payer, $payee, 1.50);
 
-        static::assertEquals($payeeId->getValue(), $transaction->getPayee()->getValue());
-        static::assertEquals($payerId->getValue(), $transaction->getPayer()->getValue());
-        static::assertEquals(1.50, $transaction->getValue());
+        $handler->handle($command);
+
+        static::expectNotToPerformAssertions();
     }
 
     public function testCustomerNotAbleToSendFundsException() {
@@ -122,16 +124,17 @@ class TransferTest extends Test
             ->disableOriginalConstructor()
             ->getMock();
 
-        $transferAction = new Transfer(
+        $handler = new CreateTransferCommandHandler(
             $authorizerServiceStub,
             $notifierServiceStub,
             $transactionRepositoryStub,
             new Logger()
         );
 
-        static::expectException(CustomerNotAbleToSendFunds::class);
+        $command = new CreateTransferCommand($payer, $payee, 1.50);
 
-        $transferAction($payer, $payee, 1.50);
+        static::expectException(CustomerNotAbleToSendFunds::class);
+        $handler->handle($command);
     }
 
     public function testInsuficientFundsException() {
@@ -173,7 +176,7 @@ class TransferTest extends Test
             ->disableOriginalConstructor()
             ->getMock();
 
-        $transferAction = new Transfer(
+        $handler = new CreateTransferCommandHandler(
             $authorizerServiceStub,
             $notifierServiceStub,
             $transactionRepositoryStub,
@@ -182,7 +185,9 @@ class TransferTest extends Test
 
         static::expectException(InsufficientFunds::class);
 
-        $transferAction($payer, $payee, 1.50);
+        $command = new CreateTransferCommand($payer, $payee, 1.50);
+
+        $handler->handle($command);
     }
 
     public function testAuthorizationFailedException() {
@@ -228,15 +233,16 @@ class TransferTest extends Test
             ->disableOriginalConstructor()
             ->getMock();
 
-        $transferAction = new Transfer(
+        $handler = new CreateTransferCommandHandler(
             $authorizerServiceStub,
             $notifierServiceStub,
             $transactionRepositoryStub,
             new Logger()
         );
 
-        static::expectException(AuthorizationFailed::class);
+        $command = new CreateTransferCommand($payer, $payee, 1.50);
 
-        $transferAction($payer, $payee, 1.50);
+        static::expectException(AuthorizationFailed::class);
+        $handler->handle($command);
     }
 }

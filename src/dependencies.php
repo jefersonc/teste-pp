@@ -74,5 +74,13 @@ return [
         return new \Jefersonc\TestePP\Infra\Middleware\ErrorHandlerMiddleware(
             $container->get(\Psr\Log\LoggerInterface::class)
         );
+    },
+    \Jefersonc\TestePP\Infra\CommandBus\Resolver::class => function (\DI\Container $container) {
+        return new \Jefersonc\TestePP\Adapters\CommandBus\ArrayResolver(
+            [
+                \Jefersonc\TestePP\Domain\Transaction\Command\CreateTransferCommand::class =>
+                    \Jefersonc\TestePP\Domain\Transaction\Command\CreateTransferCommandHandler::class
+            ]
+        );
     }
 ];

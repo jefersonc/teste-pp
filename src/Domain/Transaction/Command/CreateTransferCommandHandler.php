@@ -2,21 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Jefersonc\TestePP\Domain\Transaction\Action;
+namespace Jefersonc\TestePP\Domain\Transaction\Command;
 
-use Jefersonc\TestePP\Domain\Customer\Customer;
 use Jefersonc\TestePP\Domain\Transaction\Exception\AuthorizationFailed;
 use Jefersonc\TestePP\Domain\Transaction\Exception\CustomerNotAbleToSendFunds;
-use Jefersonc\TestePP\Domain\Transaction\Exception\FundsLocked;
 use Jefersonc\TestePP\Domain\Transaction\Exception\InsufficientFunds;
 use Jefersonc\TestePP\Domain\Transaction\Transaction;
-use Jefersonc\TestePP\Ports\Infra\Lock;
 use Jefersonc\TestePP\Ports\Repository\TransactionRepository;
 use Jefersonc\TestePP\Ports\Service\Authorizer;
 use Jefersonc\TestePP\Ports\Service\Notifier;
 use Psr\Log\LoggerInterface;
 
-class Transfer
+class CreateTransferCommandHandler
 {
     private Authorizer $authorizerService;
 
@@ -38,15 +35,19 @@ class Transfer
         $this->logger = $logger;
     }
 
-    public function __invoke(Customer $payer, Customer $payee, float $value): Transaction
+    public function handle(CreateTransferCommand $command): void
     {
-        $transaction = Transaction::generate($payer, $payee, $value);
+        $transaction = Transaction::generate(
+            $command->getPayer(),
+            $command->getPayee(),
+            $command->getValue()
+        );
 
-        if (! $payer->canSendFunds()) {
+        if (! $command->getPayer()->canSendFunds()) {
             throw new CustomerNotAbleToSendFunds;
         }
 
-        if ($payer->getBalance() < $value) {
+        if ($command->getPayer()->getBalance() < $command->getValue()) {
             throw new InsufficientFunds;
         }
 
@@ -62,7 +63,5 @@ class Transfer
 
         // todo: enfileirar isso aqui
         $this->notifierService->notify($transaction);
-
-        return $transaction;
     }
 }

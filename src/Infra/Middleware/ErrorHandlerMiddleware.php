@@ -7,6 +7,7 @@ namespace Jefersonc\TestePP\Infra\Middleware;
 use Jefersonc\TestePP\Domain\Transaction\Exception\FundsLocked;
 use Jefersonc\TestePP\Infra\Exception\DomainException;
 use Jefersonc\TestePP\Infra\Exception\EntityNotFoundException;
+use Jefersonc\TestePP\Infra\Exception\NotFoundException;
 use Jefersonc\TestePP\Ports\Infra\Lock;
 use JsonSchema\Validator;
 use Psr\Http\Message\ResponseInterface;
@@ -45,8 +46,8 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
             ]);
 
             return $this->response(422, $e->getMessage());
-        } catch (EntityNotFoundException $e) {
-            $this->logger->error("Entity not found exception thrown", [
+        } catch (NotFoundException $e) {
+            $this->logger->error("Not found exception thrown", [
                 "message" => $e->getMessage()
             ]);
 

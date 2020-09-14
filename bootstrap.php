@@ -19,8 +19,8 @@ $app = AppFactory::create(null, $container);
 $app->addBodyParsingMiddleware();
 
 $app->post('/transaction', function (Request $request, Response $response) use ($container) {
-    $transfer = $container->get(\Jefersonc\TestePP\Domain\Transaction\Action\Transfer::class);
     $customerRepository = $container->get(\Jefersonc\TestePP\Adapters\Repository\CustomerMongoRepository::class);
+    $commandBus = $container->get(\Jefersonc\TestePP\Infra\CommandBus\CommandBus::class);
 
     $payload = $request->getParsedBody();
 
@@ -35,14 +35,21 @@ $app->post('/transaction', function (Request $request, Response $response) use (
         throw new \Jefersonc\TestePP\Infra\Exception\EntityNotFoundException("Payer not found");
     }
 
-    $transfer($payer, $payee, $payload['value']);
 
-    return $response;
+    $command = new \Jefersonc\TestePP\Domain\Transaction\Command\CreateTransferCommand(
+        $payer,
+        $payee,
+        $payload['value']
+    );
+
+    $commandBus->dispatch($command);
+
+    return $response->withStatus(204);
 })->add(
-    new \Jefersonc\TestePP\Infra\Middleware\PayloadValidationMiddleware(
-        \Jefersonc\TestePP\Infra\Http\Validation\SolicitTransfer::scheme
+        new \Jefersonc\TestePP\Infra\Middleware\PayloadValidationMiddleware(
+            \Jefersonc\TestePP\Infra\Http\Validation\SolicitTransfer::scheme
+        )
     )
-)
     ->add($container->get(\Jefersonc\TestePP\Infra\Middleware\LockBalanceMiddleware::class))
     ->add($container->get(\Jefersonc\TestePP\Infra\Middleware\ErrorHandlerMiddleware::class));
 

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Jefersonc\TestePP\Infra\Exception;
+namespace Jefersonc\TestePP\Infra\CommandBus;
 
-use Exception;
+use Jefersonc\TestePP\Infra\Exception\NotFoundException;
 use Throwable;
 
 /**
  * Class DomainException
  * @package Jefersonc\TestePP\Infra\Exception
  */
-class EntityNotFoundException extends NotFoundException
+class CommandNotFoundException extends NotFoundException
 {
     /**
      * DomainException constructor.
@@ -19,7 +19,7 @@ class EntityNotFoundException extends NotFoundException
      * @param int $code
      * @param Throwable|null $previous
      */
-    public function __construct($message = "Entity not found", $code = 0, Throwable $previous = null)
+    public function __construct($message = "Command not found", $code = 0, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

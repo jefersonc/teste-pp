@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Jefersonc\TestePP\Adapters\Infra;
 
-use Jefersonc\TestePP\Domain\Customer\Customer;
 use Jefersonc\TestePP\Ports\Infra\Lock;
 use Psr\Log\LoggerInterface;
 use Redis;

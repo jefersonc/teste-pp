@@ -11,7 +11,7 @@ use Throwable;
  * Class DomainException
  * @package Jefersonc\TestePP\Infra\Exception
  */
-class EntityNotFoundException extends NotFoundException
+class NotFoundException extends Exception
 {
     /**
      * DomainException constructor.
@@ -19,7 +19,7 @@ class EntityNotFoundException extends NotFoundException
      * @param int $code
      * @param Throwable|null $previous
      */
-    public function __construct($message = "Entity not found", $code = 0, Throwable $previous = null)
+    public function __construct($message = "Not Found Exception", $code = 0, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

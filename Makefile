@@ -17,3 +17,6 @@ analyze:
 	- docker-compose exec dev composer run stan-analysis
 	- docker-compose exec dev composer run mess-report
 	- docker-compose exec dev composer run sniffer-report
+
+request:
+	- curl -v -X POST http://localhost:8080/transaction -H 'Content-Type: application/json' -d '{"value" : 100.00,"payer" : 4,"payee" : 15 }'
